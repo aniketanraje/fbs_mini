@@ -1,36 +1,29 @@
 import cv2
-from cascade_classifier import faceCascade
-import sys 
+cascades_path = './Haarcascades/'
+camera = cv2.VideoCapture(0)
 
-mn 
-sys.setrecursionlimit(1500)
-
-def get_stream(cam_uri=0):
-    stream = cv2.VideoCapture(cam_uri)
-    return stream
-
-
-def face_detector(cam_uri=0):
-    video_capture = get_stream(cam_uri)
+def gen_frames():  
     while True:
-        # Capture frame-by-frame
-        working, frame = video_capture.read()
-        ret, frame = video_capture.read()
-        if not working:
+        success, frame = camera.read()  # read the camera frame
+        if not success:
             break
         else:
+            detector=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+            eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")    
+            # detector=cv2.CascadeClassifier(cv2.data.haarcascades + './Haarcascades/haarcascade_frontalface_default.xml')
+            # eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "./Haarcascades/haarcascade_eye.xml")
+            faces=detector.detectMultiScale(frame,1.1,7)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = faceCascade.detectMultiScale(
-                gray,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                minSize=(30, 30),
-                flags=cv2.CASCADE_SCALE_IMAGE
-            )
-            # Draw a rectangle around the faces
+             #Draw the rectangle around each face
             for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-                ret, buffer = cv2.imencode(".jpg", frame)
-                frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+                roi_gray = gray[y:y+h, x:x+w]
+                roi_color = frame[y:y+h, x:x+w]
+                eyes = eye_cascade.detectMultiScale(roi_gray, 1.1, 3)
+                for (ex, ey, ew, eh) in eyes:
+                    cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 255, 0), 2)
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
