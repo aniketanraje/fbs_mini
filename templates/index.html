@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html>
-
-
-<body>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8  offset-lg-2">
-                <h3 class="mt-5">Live Web Camera Streaming</h3>
-                <h4> for frontal face detection and eye detection</h4>
-                <h5>using Haar Cascade Algorithm</h5> 
-                <img src="{{ url_for('video_feed') }}" width="50%">
-            </div>
-        </div>
-    </div>
-</body>
-
-
-</html>
+	<html>
+    	<title> Face Detector</title>
+	        <body>
+	            <div class="container">
+	                <div class="row">
+	                    <div class="col-lg-8  offset-lg-2">
+	                        <center> <h3 class="mt-5">Live Web Camera Streaming</h3> </center>
+	                        <center> <h4> for frontal face detection and eye detection using Haar Cascade Algorithm</h4></center>
+	                        <center><a href="{{ url_for('about') }}"> About</a></center>
+	                        <center> <img src="{{ url_for('video_feed') }}" width="45%"> </center>
+                            
+	                    </div>
+        	        </div>
+	            </div>
+	        </body>
+	</html>
