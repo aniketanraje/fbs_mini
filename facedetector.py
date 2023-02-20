@@ -13,6 +13,7 @@ def gen_frames():
         For frontal Human face detection, it uses haarcascade_frontalface_default
         and for detecting eyes in a live stream, it will use haarcascade_eye.
     """
+
     while True:
         success, frame = camera.read()  # read the camera frame
         if not success:
@@ -24,7 +25,8 @@ def gen_frames():
             # web cam
             # here detector will be used to detect the face 
             # and eye_cascade will be used to detect the eyes
-            detector=cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+            detector=cv2.CascadeClassifier(cv2.data.haarcascades +
+                                 "haarcascade_frontalface_default.xml")
             eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_eye.xml")    
             faces=detector.detectMultiScale(frame,1.1,7)
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
